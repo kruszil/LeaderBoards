@@ -66,8 +66,10 @@ public class ScoreControllerTest {
 	@Test
 	public void testGetBestScoresReturnedListHasManyRecords() {
 		List<Score> scores = new ArrayList<>();
-		scores.add(new Score(1, 10, new Game(1, "tictactoe"), new User(1, "John")));
-		scores.add(new Score(2, 20, new Game(1, "tictactoe"), new User(2, "Paul")));
+		scores.add(new Score(1, 10, new Game(1, "tictactoe"), new User(1,
+				"John")));
+		scores.add(new Score(2, 20, new Game(1, "tictactoe"), new User(2,
+				"Paul")));
 		Mockito.when(scoresDAO.getBestScoresByGame(Matchers.eq("chess")))
 				.thenReturn(scores);
 		List<ScoreEntry> scoreEntries = scoreController.getBestScores("chess");
@@ -113,6 +115,10 @@ public class ScoreControllerTest {
 				.thenReturn(null);
 		Mockito.when(usersDAO.insertUser(Matchers.eq("John"))).thenReturn(1);
 		Mockito.when(
+				scoresDAO.checkScore(Matchers.eq("tictactoe"),
+						Matchers.eq("John"), Matchers.eq(100)))
+				.thenReturn(null);
+		Mockito.when(
 				scoresDAO.insertScore(Matchers.eq("tictactoe"),
 						Matchers.eq("John"), Matchers.eq(100))).thenReturn(1);
 		ScoreEntry scoreEntry = new ScoreEntry();
@@ -138,8 +144,13 @@ public class ScoreControllerTest {
 				.thenReturn(new User(1, "John"));
 		Mockito.when(usersDAO.insertUser(Matchers.eq("John"))).thenReturn(1);
 		Mockito.when(
+				scoresDAO.checkScore(Matchers.eq("tictactoe"),
+						Matchers.eq("John"), Matchers.eq(100))).thenReturn(
+				new Score(1, 100, (new Game(1, "tictactoe")), (new User(1,
+						"John"))));
+		Mockito.when(
 				scoresDAO.insertScore(Matchers.eq("tictactoe"),
-						Matchers.eq("John"), Matchers.eq(100))).thenReturn(1);
+						Matchers.eq("John"), Matchers.eq(100))).thenReturn(0);
 		ScoreEntry scoreEntry = new ScoreEntry();
 		scoreEntry.setGame("tictactoe");
 		scoreEntry.setScore(100);
@@ -149,7 +160,7 @@ public class ScoreControllerTest {
 				Matchers.anyString());
 		Mockito.verify(usersDAO, Mockito.times(0)).insertUser(
 				Matchers.anyString());
-		Mockito.verify(scoresDAO, Mockito.times(1)).insertScore(
+		Mockito.verify(scoresDAO, Mockito.times(0)).insertScore(
 				Matchers.anyString(), Matchers.anyString(), Matchers.anyInt());
 	}
 

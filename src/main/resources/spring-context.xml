@@ -26,9 +26,5 @@
 	 <bean id="scoresDAO" class="com.ilona.leaderBoards.dao.ScoresDAO">
 	 	<property name="dataSource" ref="dataSource"/>
 	 </bean>
-	 <bean class="com.ilona.leaderBoards.controller.Test">
-	 	<constructor-arg ref="gamesDAO"/>
-	 	<constructor-arg ref="usersDAO"/>
-	 	<constructor-arg ref="scoresDAO"/>
-	 </bean>
+	 
 </beans>

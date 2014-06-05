@@ -36,10 +36,10 @@ public class ScoreController {
 		if (game.equals("")) {
 			throw new RuntimeException("Game is empty");
 		}
-		if(scores==null){
+		if (scores == null) {
 			throw new RuntimeException("List is null");
 		}
-		
+
 		for (Score score : scores) {
 			ScoreEntry scoreEntry = new ScoreEntry();
 			scoreEntry.setGame(score.getGame().getName());
@@ -79,8 +79,11 @@ public class ScoreController {
 		if (usersDAO.getUserByUsername(scoreEntry.getUser()) == null) {
 			usersDAO.insertUser(scoreEntry.getUser());
 		}
-		scoresDAO.insertScore(scoreEntry.getGame(), scoreEntry.getUser(),
-				scoreEntry.getScore());
+		if ((scoresDAO.checkScore(scoreEntry.getGame(), scoreEntry.getUser(),
+				scoreEntry.getScore()) == null)) {
+			scoresDAO.insertScore(scoreEntry.getGame(), scoreEntry.getUser(),
+					scoreEntry.getScore());
+		}
 	}
 
 	public void setScoresDAO(ScoresDAO scoresDAO) {

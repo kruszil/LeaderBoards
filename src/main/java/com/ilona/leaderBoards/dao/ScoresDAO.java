@@ -77,7 +77,7 @@ public class ScoresDAO {
 		} catch (SQLException e) {
 
 			e.printStackTrace();
-		}finally {
+		} finally {
 			if (connection != null) {
 				try {
 					connection.close();
@@ -88,5 +88,49 @@ public class ScoresDAO {
 		}
 		return null;
 
+	}
+
+	// Checking if a new score is equal or less than the score already existing
+	// in the database for particular game and the user.
+	public Score checkScore(String game, String user, int score) {
+		Connection connection = null;
+		Statement statement = null;
+
+		try {
+			connection = dataSource.getConnection();
+			statement = connection.createStatement();
+			ResultSet rset = statement
+					.executeQuery("SELECT * FROM games, users, scores WHERE "
+							+ "games.id = scores.game_id AND users.id = scores.user_id AND "
+							+ "games.game='"
+							+ game
+							+ "' AND users.username='"
+							+ user
+							+ "' AND scores.score>=" + score);
+			while (rset.next()) {
+				Game requestedGame = new Game(rset.getInt("games.id"),
+						rset.getString("games.game"));
+				User requestedUser = new User(rset.getInt("users.id"),
+						rset.getString("users.username"));
+
+				Score requestedScore = new Score(rset.getInt("scores.id"),
+						rset.getInt("scores.score"), requestedGame,
+						requestedUser);
+				return requestedScore;
+			}
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return null;
 	}
 }
